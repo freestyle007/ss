@@ -10,7 +10,7 @@ import time
 with open("/etc/sysctl.conf","r") as f:
     old_config = f.read()
 if 'bbr' not in old_config:
-    os.system("yum install -y epel-release git svn python-setuptools python-pip vim")  # yum rpm
+    os.system("yum install -y epel-release git svn python-setuptools python-pip vim net-tools htop nload")  # yum rpm
     os.system('rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org')
     os.system('rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm')
     os.system("rm -rf /var/lib/yum/history/*.sqlite")
@@ -18,6 +18,7 @@ if 'bbr' not in old_config:
     os.system("sed -i '/GRUB_DEFAULT/s/saved/0/' /etc/default/grub && grub2-mkconfig -o"
               " /boot/grub2/grub.cfg")  # grub修改
     os.system("pip install shadowsocks")
+    os.system("cd /root &&  git clone https://github.com/flyzy2005/ss-fly.git")
     sysctl_config = ''''
 # sysctl settings are defined through files in
 # /usr/lib/sysctl.d/, /run/sysctl.d/, and /etc/sysctl.d/.
@@ -39,14 +40,14 @@ net.ipv4.tcp_congestion_control = bbr
     '''
     with open("/etc/sysctl.conf","w") as f:
         f.write(sysctl_config)
-
     # 加入开启启动项
     # 端口
     port = sys.argv[1].strip()
     # 密码
     secret = sys.argv[2].strip()
+    os.system("/root/ss-fly/ss-fly.sh -i %s %s" % (secret, port))
     with open("/etc/rc.local", "a") as f:
-        f.write("\nssserver -p %s -k %s -m rc4-md5 -d start\n" % (port, secret))
+        f.write("\n/root/ss-fly/ss-fly.sh -i %s %s\n" % (secret, port))
     os.system('chmod 777 /etc/rc.d/rc.local')
     time.sleep(10)
     os.system('reboot')
