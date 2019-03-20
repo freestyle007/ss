@@ -39,8 +39,6 @@ net.ipv4.tcp_congestion_control = bbr
     '''
     with open("/etc/sysctl.conf","w") as f:
         f.write(sysctl_config)
-    time.sleep(10)
-    os.system('reboot')
 
     # 加入开启启动项
     # 端口
@@ -49,7 +47,8 @@ net.ipv4.tcp_congestion_control = bbr
     secret = sys.argv[2].strip()
     with open("/etc/rc.local", "a") as f:
         f.write("\nssserver -p %s -k %s -m rc4-md5 -d start\n" % (port, secret))
-
+    time.sleep(10)
+    os.system('reboot')
 else:
     pass
 
