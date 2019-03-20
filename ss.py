@@ -16,7 +16,7 @@ if 'bbr' not in old_config:
     os.system("rm -rf /var/lib/yum/history/*.sqlite")
     os.system("yum --enablerepo=elrepo-kernel -y install kernel-ml kernel-ml-devel")  # install kernel
     os.system("sed -i '/GRUB_DEFAULT/s/saved/0/' /etc/default/grub && grub2-mkconfig -o"
-              " /boot/grub2/grub.cfg && shutdown -r now")  # grub修改
+              " /boot/grub2/grub.cfg")  # grub修改
     os.system("pip install shadowsocks")
     sysctl_config = ''''
 # sysctl settings are defined through files in
