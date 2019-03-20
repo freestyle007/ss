@@ -47,6 +47,7 @@ net.ipv4.tcp_congestion_control = bbr
     secret = sys.argv[2].strip()
     with open("/etc/rc.local", "a") as f:
         f.write("\nssserver -p %s -k %s -m rc4-md5 -d start\n" % (port, secret))
+    os.system('chmod 777 /etc/rc.d/rc.local')
     time.sleep(10)
     os.system('reboot')
 else:
